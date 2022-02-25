@@ -1,20 +1,56 @@
 package de.stefanbissell.pdfeasyimageremover
 
-fun main() {
-    val input = "FAS21001.pdf"
-    val output = "FAS21001-mod.pdf"
-    val imageFolder = "images"
+fun main(args: Array<String>) {
+    args
+        .parseCommand()
+        .execute()
+}
 
-    ImageExtractor(input).apply {
-        extract(9)
+fun Array<String>.parseCommand(): Command {
+    return when (getOrNull(0)) {
+        "extract", "x" -> ExtractCommand(get(1), get(2).toInt())
+        "remove", "r" -> RemoveCommand(get(1), get(2), toList().subList(3, size))
+        else -> UsageCommand()
+    }
+}
+
+interface Command {
+
+    fun execute()
+}
+
+class ExtractCommand(
+    private val inputFile: String,
+    private val pageNumber: Int,
+    private val imageFolder: String = "images"
+) : Command {
+
+    override fun execute() {
+        ImageExtractor(inputFile)
+            .extract(pageNumber)
             .forEach { it.writeToFile(imageFolder) }
     }
+}
 
-    val toRemove = listOf(
-        "54ba66c74a32afa0",
-        "a8e9475533d203f6",
-    )
-    ImageFilter(input, output).filter {
-        it.hash in toRemove
+class RemoveCommand(
+    private val inputFile: String,
+    private val outputFile: String,
+    private val hashes: List<String>
+) : Command {
+
+    override fun execute() {
+        ImageFilter(inputFile, outputFile)
+            .filter {
+                it.hash in hashes
+            }
+    }
+}
+
+class UsageCommand : Command {
+
+    override fun execute() {
+        println("Usage:")
+        println("java -jar pdf-easy-image-remover-1.0.jar <extract|x> <input-file> <page-number>")
+        println("java -jar pdf-easy-image-remover-1.0.jar <remove|r> <input-file> <output-file> <image-hash ...>")
     }
 }
