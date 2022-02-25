@@ -1,5 +1,6 @@
 package de.stefanbissell.pdfeasyimageremover
 
+import com.itextpdf.kernel.pdf.PdfDictionary
 import com.itextpdf.kernel.pdf.PdfName
 import com.itextpdf.kernel.pdf.PdfObject
 import com.itextpdf.kernel.pdf.PdfStream
@@ -17,6 +18,10 @@ private fun ByteArray.hash() =
         hash.doFinal(result, 0)
         String(Hex.encode(result))
     }
+
+val PdfObject?.isPage
+    get() = this is PdfDictionary &&
+        getAsName(PdfName.Type) == PdfName.Page
 
 val PdfObject?.isImage
     get() = this is PdfStream &&

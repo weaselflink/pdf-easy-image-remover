@@ -1,8 +1,10 @@
 package de.stefanbissell.pdfeasyimageremover
 
 import com.itextpdf.kernel.exceptions.PdfException
+import com.itextpdf.kernel.pdf.PdfArray
 import com.itextpdf.kernel.pdf.PdfDictionary
 import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfIndirectReference
 import com.itextpdf.kernel.pdf.PdfLiteral
 import com.itextpdf.kernel.pdf.PdfName
 import com.itextpdf.kernel.pdf.PdfObject
@@ -43,6 +45,8 @@ class ImageFilter(
     ) : PdfWriter(filename) {
 
         override fun write(pdfObject: PdfObject?): PdfOutputStream {
+            logPage(pdfObject)
+
             if (pdfObject.isForm) {
                 val form = PdfFormXObject(pdfObject as PdfStream)
                 val imagesToRemove = form.xObjects
@@ -59,7 +63,7 @@ class ImageFilter(
                     pdfObject.setData(
                         content
                             .split("\n")
-                            .filter { !it.matches(doRegex) }
+                            .filterNot { it.matches(doRegex) }
                             .joinToString("\n")
                             .toByteArray()
                     )
@@ -185,6 +189,30 @@ private fun logForm(prefix: String, obj: PdfObject?) {
         // println(content.split("\n"))
         // println(content.split("\n").filter { it != "/Im0 Do" })
         println()
+    }
+}
+
+@Suppress("unused")
+private fun logPage(pdfObject: PdfObject?) {
+    if (pdfObject.isPage) {
+        println((pdfObject as PdfDictionary).get(PdfName.Resources, false))
+        val contents = (pdfObject as PdfDictionary).get(PdfName.Contents, false)
+        when (contents) {
+            is PdfArray -> {
+                contents
+                    .filterIsInstance<PdfStream>()
+                    .forEach { println("a s $it") }
+            }
+            is PdfStream -> {
+                println("s $contents")
+            }
+            is PdfIndirectReference -> {
+                println("r $contents")
+            }
+            else -> {
+                println("x $contents")
+            }
+        }
     }
 }
 
