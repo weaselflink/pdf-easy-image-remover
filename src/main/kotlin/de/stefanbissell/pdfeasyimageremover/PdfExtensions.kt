@@ -6,6 +6,8 @@ import com.itextpdf.kernel.pdf.PdfObject
 import com.itextpdf.kernel.pdf.PdfStream
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject
 import com.itextpdf.kernel.pdf.xobject.PdfImageXObject
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import org.bouncycastle.crypto.digests.SHA256Digest
 import org.bouncycastle.util.encoders.Hex
 
@@ -19,17 +21,32 @@ private fun ByteArray.hash() =
         String(Hex.encode(result))
     }
 
-val PdfObject?.isPage
-    get() = this is PdfDictionary &&
-        getAsName(PdfName.Type) == PdfName.Page
+@OptIn(ExperimentalContracts::class)
+fun isPage(pdfObject: PdfObject?): Boolean {
+    contract {
+        returns(true) implies (pdfObject is PdfDictionary)
+    }
+    return pdfObject is PdfDictionary &&
+        pdfObject.getAsName(PdfName.Type) == PdfName.Page
+}
 
-val PdfObject?.isImage
-    get() = this is PdfStream &&
-        getAsName(PdfName.Subtype) == PdfName.Image
+@OptIn(ExperimentalContracts::class)
+fun isImage(pdfObject: PdfObject?): Boolean {
+    contract {
+        returns(true) implies (pdfObject is PdfStream)
+    }
+    return pdfObject is PdfStream &&
+        pdfObject.getAsName(PdfName.Subtype) == PdfName.Image
+}
 
-val PdfObject?.isForm
-    get() = this is PdfStream &&
-        getAsName(PdfName.Subtype) == PdfName.Form
+@OptIn(ExperimentalContracts::class)
+fun isForm(pdfObject: PdfObject?): Boolean {
+    contract {
+        returns(true) implies (pdfObject is PdfStream)
+    }
+    return pdfObject is PdfStream &&
+        pdfObject.getAsName(PdfName.Subtype) == PdfName.Form
+}
 
 private val xObjectRegex = Regex("(/.*?) ([0-9]+)")
 

@@ -47,8 +47,8 @@ class ImageFilter(
         override fun write(pdfObject: PdfObject?): PdfOutputStream {
             logPage(pdfObject)
 
-            if (pdfObject.isForm) {
-                val form = PdfFormXObject(pdfObject as PdfStream)
+            if (isForm(pdfObject)) {
+                val form = PdfFormXObject(pdfObject)
                 val imagesToRemove = form.xObjects
                     .mapNotNull { xObject ->
                         imageExtractor.findById(xObject.second)
@@ -157,7 +157,7 @@ class ImageFilteringProcessor(
                     write(operands)
                 } else {
                     when {
-                        stream.isImage -> {
+                        isImage(stream) -> {
                             val image = PdfImageXObject(stream)
                             val imageInfo = imageExtractor.findByHash(image.hash())
                             if (imageInfo != null && filter(imageInfo)) {
@@ -177,8 +177,8 @@ class ImageFilteringProcessor(
 
 @Suppress("unused")
 private fun logForm(prefix: String, obj: PdfObject?) {
-    if (obj.isForm) {
-        val form = PdfFormXObject(obj as PdfStream)
+    if (isForm(obj)) {
+        val form = PdfFormXObject(obj)
         // println("$prefix ${form.resources.resourceNames}")
         // println("$prefix ${form.resources.pdfObject.values().map { it::class.java.name }}")
         // println("$prefix ${(form.resources.pdfObject[PdfName.XObject] as PdfDictionary?)?.keySet()}")
@@ -194,10 +194,9 @@ private fun logForm(prefix: String, obj: PdfObject?) {
 
 @Suppress("unused")
 private fun logPage(pdfObject: PdfObject?) {
-    if (pdfObject.isPage) {
-        println((pdfObject as PdfDictionary).get(PdfName.Resources, false))
-        val contents = (pdfObject as PdfDictionary).get(PdfName.Contents, false)
-        when (contents) {
+    if (isPage(pdfObject)) {
+        println(pdfObject.get(PdfName.Resources, false))
+        when (val contents = pdfObject.get(PdfName.Contents, false)) {
             is PdfArray -> {
                 contents
                     .filterIsInstance<PdfStream>()
