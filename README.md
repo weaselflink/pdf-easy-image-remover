@@ -20,7 +20,7 @@ First extract images using any page that contains the image you want to remove:
 java -jar pdf-easy-image-remover-1.0.jar <extract|x> <input-file> <page-number>
 ```
 
-This will create a sub folder "images" and put all images that are on the given
+This will create a sub folder `images` and put all images that are on the given
 page in this folder. The filenames are `<hash-of-image>.png`.
 
 Look through the files and find the ones you want to remove and then call:
