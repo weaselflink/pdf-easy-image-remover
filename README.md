@@ -12,6 +12,29 @@ To my knowledge there are no free to use editors available to remove such images
 software uses the excellent (but complicated) [itext7](https://github.com/itext/itext7) library
 to remove any images you want from any given PDF.
 
+## Building the binary
+
+### Requirements
+
+You need to have any Java JDK installed that is version 11 or higher.
+The OpenJDK build by [azul](https://www.azul.com/downloads/?package=jdk#download-openjdk) is a good choice.
+
+### On Linux/MacOS:
+
+```
+./gradlew clean build
+```
+
+### On Windows
+
+```
+.\gradlew.bat clean build
+```
+
+### Binary location
+
+The binary can be found under `build/libs/pdf-easy-image-remover-1.0-all.jar`.
+
 ## Usage
 
 First extract images using any page that contains the image you want to remove:
