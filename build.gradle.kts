@@ -8,6 +8,7 @@ plugins {
     application
     kotlin("jvm")
     id("com.github.ben-manes.versions")
+    id("com.github.johnrengelman.shadow")
 }
 
 group = "de.stefanbissell.pdf-easy-image-remover"
@@ -22,6 +23,10 @@ dependencies {
     implementation("org.slf4j:slf4j-nop:1.7.36")
     implementation("com.github.jai-imageio:jai-imageio-core:1.4.0")
     implementation("com.github.jai-imageio:jai-imageio-jpeg2000:1.4.0")
+}
+
+application {
+    mainClass.set("de.stefanbissell.pdfeasyimageremover.MainKt")
 }
 
 tasks {
