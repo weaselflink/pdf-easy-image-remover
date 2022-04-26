@@ -50,7 +50,7 @@ class UsageCommand : Command {
 
     override fun execute() {
         println("Usage:")
-        println("java -jar pdf-easy-image-remover-1.0.jar <extract|x> <input-file> <page-number>")
-        println("java -jar pdf-easy-image-remover-1.0.jar <remove|r> <input-file> <output-file> <image-hash ...>")
+        println("java -jar pdf-easy-image-remover-1.0-all.jar <extract|x> <input-file> <page-number>")
+        println("java -jar pdf-easy-image-remover-1.0-all.jar <remove|r> <input-file> <output-file> <image-hash ...>")
     }
 }
