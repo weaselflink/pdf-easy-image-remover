@@ -54,3 +54,9 @@ java -jar pdf-easy-image-remover-1.0-all.jar <remove|r> <input-file> <output-fil
 
 The output file will contain a copy of the original PDF with all given images removed from every page.
 The actual image data is still contained in the file, but it is no longer rendered anywhere.
+
+You can also just list the images on a page:
+
+```
+java -jar pdf-easy-image-remover-1.0-all.jar <list|l> <input-file> <page-number>
+```
