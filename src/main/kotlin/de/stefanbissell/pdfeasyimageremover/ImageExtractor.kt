@@ -91,6 +91,12 @@ data class ImageInfo(
             }
     }
 
+    fun summary() =
+        "${formatLength(image.width)}x${formatLength(image.height)}    $hash    ${image.identifyImageFileExtension()}"
+
+    private fun formatLength(length: Float) =
+        String.format("%5.0f", length)
+
     private fun makeFolder(folder: String) {
         File(folder).mkdirs()
     }

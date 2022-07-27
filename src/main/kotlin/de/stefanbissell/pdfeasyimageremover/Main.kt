@@ -8,11 +8,11 @@ fun main(args: Array<String>) {
 
 fun Array<String>.parseCommand(): Command {
     return when (getOrNull(0)) {
+        "list", "l" -> ListCommand(get(1), get(2).toInt())
         "extract", "x" -> ExtractCommand(get(1), get(2).toInt())
         "remove", "r" -> RemoveCommand(get(1), get(2), toList().subList(3, size))
         else -> UsageCommand()
-    }
-}
+    }}
 
 interface Command {
 
@@ -29,6 +29,19 @@ class ExtractCommand(
         ImageExtractor(inputFile)
             .extract(pageNumber)
             .forEach { it.writeToFile(imageFolder) }
+    }
+}
+
+class ListCommand(
+    private val inputFile: String,
+    private val pageNumber: Int
+) : Command {
+
+    override fun execute() {
+        ImageExtractor(inputFile)
+            .extract(pageNumber)
+            .also { println("size           hash                type") }
+            .forEach { println(it.summary()) }
     }
 }
 
