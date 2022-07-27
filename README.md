@@ -60,3 +60,5 @@ You can also just list the images on a page:
 ```
 java -jar pdf-easy-image-remover-1.0-all.jar <list|l> <input-file> <page-number>
 ```
+
+This will list the size, hash and image extension for each image visible on the page.
